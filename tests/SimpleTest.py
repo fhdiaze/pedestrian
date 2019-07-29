@@ -1,6 +1,7 @@
 import numpy as np
 from pedestrian.detection.YoloV3Voc import YoloV3Voc
 from pedestrian.detection.YoloV3Coco import YoloV3Coco
+from pedestrian.position.TwoCornersPM import TwoCornersPM
 from PIL import Image, ImageDraw
 
 detector = YoloV3Coco()
@@ -9,6 +10,8 @@ img = img.resize((416,416))
 ima = np.array(img, dtype=np.float32).reshape(-1, 416, 416, 3)
 
 boxes = detector.detect(ima)
+pm = TwoCornersPM()
+pm.scale()
 print(np.array(boxes).shape)
 
 draw = ImageDraw.Draw(img)
