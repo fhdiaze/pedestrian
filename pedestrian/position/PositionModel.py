@@ -50,21 +50,21 @@ class PositionModel(object):
         return position
 
     # position = [..., coordinates]
-    # oRange = [[xMin, xMax], [yMin, yMax]]
+    # sRange = [[xMin, xMax], [yMin, yMax]]
     # tRange = [[xMin, xMax], [yMin, yMax]]
-    def scale(self, position, o_range, t_range):
+    def scale(self, position, s_range, t_range):
         """
 
         :param position:
-        :param o_range:
+        :param s_range:
         :param t_range:
         :return:
         """
         shape = position.shape
-        o_diff = np.abs(o_range[:, :1] - o_range[:, 1:])  # [[xDiff], [yDiff]]
+        o_diff = np.abs(s_range[:, :1] - s_range[:, 1:])  # [[xDiff], [yDiff]]
         t_diff = np.abs(t_range[:, :1] - t_range[:, 1:])  # [[xDiff], [yDiff]]
         position = position.reshape((-1, 2)).T
-        position = t_diff * (position - o_range[:, :1]) / o_diff + t_range[:, :1]
+        position = t_diff * (position - s_range[:, :1]) / o_diff + t_range[:, :1]
         position = position.T.reshape(shape)
 
         return position
