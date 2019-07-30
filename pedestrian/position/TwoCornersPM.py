@@ -16,19 +16,17 @@ class TwoCornersPM(PositionModel):
     def to_two_corners(self, position):
         return position
 
-    """
-    Plot (in side) the position in a frame. 
-    @type  frame:    PIL.Image
-    @param frame:    The frame
-    @type  position: [integer, integer, integer, integer]
-    @param position: The objects's corners coordinates [x1, y1, x2, y2]
-    @type  outline:  string
-    @param outline:  The name of the position color.
-    """
-
     def plot(self, frame, position, outline):
+        """
+        Plot (in side) the position in a frame.
+        @type  frame:    PIL.Image
+        @param frame:    The frame
+        @type  position: [integer, integer, integer, integer]
+        @param position: The objects's corners coordinates [x1, y1, x2, y2]
+        @type  outline:  string
+        @param outline:  The name of the position color.
+        """
         draw = ImageDraw.Draw(frame)
-
         draw.rectangle(position, outline=outline)
 
     # gtPosition.shape = (batchSize, seqLength, target_dim(x1, y1, x2, y2))
