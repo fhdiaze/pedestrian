@@ -8,12 +8,13 @@ from PIL import Image, ImageDraw
 
 detector = YoloV3Coco()
 det_name = type(detector).__name__
-img_path = "/home/investigacion/Pictures/"
+in_path = "/home/investigacion/Pictures/InputImages"
+out_path = "/home/investigacion/Pictures/OutputImages"
 img_name = "TM_evasores_00008.jpg"
 out_img_name = det_name + "Box" + img_name
 outline = "blue"
 
-with Image.open(os.path.join(img_path, img_name)) as img:
+with Image.open(os.path.join(in_path, img_name)) as img:
 
     # Variables
     width, height = img.size
@@ -31,4 +32,4 @@ with Image.open(os.path.join(img_path, img_name)) as img:
     for box in boxes:
         pm.plot(img, list(box), outline)
 
-    img.save(os.path.join(img_path, out_img_name))
+    img.save(os.path.join(out_path, out_img_name))
