@@ -54,10 +54,10 @@ class PositionModel(object):
     # tRange = [[xMin, xMax], [yMin, yMax]]
     def scale(self, position, s_range, t_range):
         """
-
+        Scale a position from source range to target range
         :param position:
-        :param s_range:
-        :param t_range:
+        :param s_range: The source range
+        :param t_range: The target range
         :return:
         """
         shape = position.shape
