@@ -9,8 +9,12 @@ class PositionModel(object):
     def get_target_dim(self):
         return self.target_dim
 
-    # position.shape = (batchSize, seqLength, target_dim(x1, y1, x2, y2))
     def from_two_corners(self, position):
+        """Transform positions from two corners format to another format
+
+        :param position: (batchSize, seqLength, target_dim(x1, y1, x2, y2))
+        :return:
+        """
         pass
 
     # position.shape = (batchSize, seqLength, target_dim(x1, y1, x2, y2))
