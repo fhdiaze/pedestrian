@@ -31,7 +31,7 @@ height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))  # float
 size = (width, height)
 t_range = np.array([[0.0, width], [0.0, height]])
 tracks = []
-out = cv2.VideoWriter(filename="C:/Users/kuby/Downloads/Ch4_out.mp4", apiPreference=cv2.CAP_GSTREAMER, fourcc=cv2.VideoWriter_fourcc(*"DIVX"), fps=15, frameSize=size)
+out = cv2.VideoWriter(filename="C:/Users/kuby/Downloads/Ch4_out.avi", apiPreference=cv2.CAP_GSTREAMER, fourcc=cv2.VideoWriter_fourcc('M','J','P','G'), fps=15, frameSize=size)
 f = 0
 while cap.isOpened() and f < 300:
     ret, frame = cap.read()
@@ -53,8 +53,9 @@ while cap.isOpened() and f < 300:
         out.write(np.array(img, dtype=np.float32))
 
 # When everything done, release the video capture and video write objects
-cap.release()
 out.release()
+cap.release()
+
 
 # Closes all the frames
 cv2.destroyAllWindows()
