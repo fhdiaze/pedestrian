@@ -6,11 +6,11 @@ from pedestrian.position.TwoCornersPM import TwoCornersPM
 from PIL import Image, ImageDraw
 
 
-detector = YoloV3Coco()
+detector = YoloV3Voc()
 det_name = type(detector).__name__
 in_path = "/home/investigacion/Pictures/InputImages"
 out_path = "/home/investigacion/Pictures/OutputImages"
-img_name = "TM_evasores_00008.jpg"
+img_name = "transmi.jpg"
 out_img_name = det_name + "Box" + img_name
 outline = "blue"
 
@@ -29,9 +29,9 @@ with Image.open(os.path.join(in_path, img_name)) as img:
 
     if boxes.size != 0:
         pm = TwoCornersPM()
-        boxes = pm.scale(boxes, s_range, t_range)
+        boxes[:, :4] = pm.scale(boxes[:, :4], s_range, t_range)
 
-        for box in boxes:
+        for box in boxes[:, :4]:
             pm.plot(img, list(box), outline)
 
         img.save(os.path.join(out_path, out_img_name))

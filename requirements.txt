@@ -2,7 +2,6 @@ cython
 numpy
 scipy
 opencv
-cpython
+cython
 matplotlib
 filterpy
-jupyter
