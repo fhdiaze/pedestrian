@@ -31,10 +31,17 @@ class TwoCornersPM(PositionModel):
 
     # gtPosition.shape = (batchSize, seqLength, target_dim(x1, y1, x2, y2))
     def iou(self, gt_position, pred_position):
-        left = np.max([pred_position[..., 0], gt_position[..., 0]], axis=0)
-        top = np.max([pred_position[..., 1], gt_position[..., 1]], axis=0)
-        right = np.min([pred_position[..., 2], gt_position[..., 2]], axis=0)
-        bottom = np.min([pred_position[..., 3], gt_position[..., 3]], axis=0)
+        gtps = gt_position.shape
+        prps = pred_position.shape
+
+        gt_position = gt_position.reshape((-1, self.target_dim))
+        pred_position = pred_position.reshape((-1, self.target_dim))
+
+        left = np.max([pred_position[:, 0], gt_position[:, 0]], axis=0)
+        top = np.max([pred_position[:, 1], gt_position[:, 1]], axis=0)
+        right = np.min([pred_position[:, 2], gt_position[:, 2]], axis=0)
+        bottom = np.min([pred_position[:, 3], gt_position[:, 3]], axis=0)
+
         intersect = (right - left) * ((right - left) > 0) * (bottom - top) * ((bottom - top) > 0)
         label_area = np.abs(gt_position[..., 2] - gt_position[..., 0]) * np.abs(gt_position[..., 3] - gt_position[..., 1])
         predict_area = np.abs(pred_position[..., 2] - pred_position[..., 0]) * np.abs(
@@ -43,4 +50,4 @@ class TwoCornersPM(PositionModel):
 
         iou = intersect / union
 
-        return iou
+        return iou.reshape(gtps[:-1]+(1,))

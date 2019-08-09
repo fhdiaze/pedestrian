@@ -31,30 +31,30 @@ height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))  # float
 size = (width, height)
 t_range = np.array([[0.0, width], [0.0, height]])
 tracks = []
-out = cv2.VideoWriter(filename="C:/Users/kuby/Downloads/Ch4_out.avi", apiPreference=cv2.CAP_GSTREAMER, fourcc=cv2.VideoWriter_fourcc('M','J','P','G'), fps=15, frameSize=size)
-f = 0
-while cap.isOpened() and f < 300:
-    ret, frame = cap.read()
-    f += 1
-    if ret:
-        img = Image.fromarray(frame)
-        in_img = img.resize(in_size)
-        in_tensor = np.array(in_img, dtype=np.float32).reshape(-1, in_size[0], in_size[1], 3)
-        # dets = detector.detect(frame)
-        # tracks = tracker.update(dets)
+with cv2.VideoWriter(filename="C:/Users/kuby/Downloads/Ch4_out.mp4", apiPreference=cv2.CAP_FFMPEG, fourcc=cv2.VideoWriter_fourcc(*"DIVX"), fps=15, frameSize=size) as out:
+    f = 0
+    while cap.isOpened() and f < 3:
+        ret, frame = cap.read()
+        f += 1
+        if ret:
+            img = Image.fromarray(frame)
+            in_img = img.resize(in_size)
+            in_tensor = np.array(in_img, dtype=np.float32).reshape(-1, in_size[0], in_size[1], 3)
+            # dets = detector.detect(frame)
+            # tracks = tracker.update(dets)
 
-        # boxes = detector.detect(in_tensor)
-        pm = TwoCornersPM()
-        #boxes = pm.scale(boxes, s_range, t_range)
+            # boxes = detector.detect(in_tensor)
+            pm = TwoCornersPM()
+            #boxes = pm.scale(boxes, s_range, t_range)
 
-        #for box in boxes:
-        #    pm.plot(img, list(box), outline)
+            #for box in boxes:
+            #    pm.plot(img, list(box), outline)
 
-        out.write(np.array(img, dtype=np.float32))
+            out.write(np.array(img, dtype=np.float32))
 
-# When everything done, release the video capture and video write objects
-out.release()
-cap.release()
+    # When everything done, release the video capture and video write objects
+    out.release()
+    cap.release()
 
 
 # Closes all the frames
