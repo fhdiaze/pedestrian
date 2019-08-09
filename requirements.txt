@@ -5,3 +5,4 @@ opencv
 cython
 matplotlib
 filterpy
+pillow
