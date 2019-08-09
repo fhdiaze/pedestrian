@@ -2,7 +2,7 @@ import numpy as np
 import os
 import cv2
 # from pedestrian.detection.YoloV3Voc import YoloV3Voc
-from pedestrian.detection.YoloV3Coco import YoloV3Coco
+# from pedestrian.detection.YoloV3Coco import YoloV3Coco
 from pedestrian.position.TwoCornersPM import TwoCornersPM
 from pedestrian.tracking.Sort import Sort
 from PIL import Image, ImageDraw
@@ -11,7 +11,7 @@ from PIL import Image, ImageDraw
 in_size = (416, 416)
 s_range = np.array([[0.0, in_size[0]], [0.0, in_size[1]]])
 outline = "blue"
-detector = YoloV3Coco()
+# detector = YoloV3Coco()
 pm = TwoCornersPM()
 tracker = Sort()
 
@@ -38,9 +38,10 @@ with cv2.VideoWriter(in_video, cv2.CAP_FFMPEG, cv2.VideoWriter_fourcc(*"DIVX"), 
             img = Image.fromarray(frame)
             in_img = img.resize(in_size)
             in_tensor = np.array(in_img, dtype=np.float32).reshape(-1, in_size[0], in_size[1], 3)
-            boxes = detector.detect(frame)
+            # boxes = detector.detect(frame)
             # boxes[:, :4] = pm.scale(boxes[:, :4], s_range, t_range)
-            # tracks = tracker.update(boxes)
+            # tracker.update(boxes)
+            # tracks = tracker.predict()
 
             #for track in tracks:
             #    pm.plot(img, list(track), outline)
