@@ -26,10 +26,12 @@ with Image.open(os.path.join(in_path, img_name)) as img:
     in_tensor = np.array(in_img, dtype=np.float32).reshape(-1, in_size[0], in_size[1], 3)
 
     boxes = detector.detect(in_tensor)
-    pm = TwoCornersPM()
-    boxes = pm.scale(boxes, s_range, t_range)
 
-    for box in boxes:
-        pm.plot(img, list(box), outline)
+    if boxes.size != 0:
+        pm = TwoCornersPM()
+        boxes = pm.scale(boxes, s_range, t_range)
 
-    img.save(os.path.join(out_path, out_img_name))
+        for box in boxes:
+            pm.plot(img, list(box), outline)
+
+        img.save(os.path.join(out_path, out_img_name))

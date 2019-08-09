@@ -16,23 +16,19 @@ class TwoCornersPM(PositionModel):
     def to_two_corners(self, position):
         return position
 
-    def plot(self, frame, position, outline):
-        """
-        Plot (in side) the position in a frame.
-        @type  frame:    PIL.Image
-        @param frame:    The frame
-        @type  position: [integer, integer, integer, integer]
-        @param position: The objects's corners coordinates [x1, y1, x2, y2]
-        @type  outline:  string
-        @param outline:  The name of the position color.
+    def plot(self, frame, position, outline: str):
+        """ Plot (in side) the position in a frame.
+
+        :param PIL.Image frame: The frame
+        :param [integer, integer, integer, integer] position: The objects's corners coordinates [x1, y1, x2, y2]
+        :param str outline:  The name of the position color.
         """
         draw = ImageDraw.Draw(frame)
         draw.rectangle(position, outline=outline)
 
     # gtPosition.shape = (batchSize, seqLength, target_dim(x1, y1, x2, y2))
     def iou(self, gt_position, pred_position):
-        gtps = gt_position.shape
-        prps = pred_position.shape
+        gtp_shape = gt_position.shape
 
         gt_position = gt_position.reshape((-1, self.target_dim))
         pred_position = pred_position.reshape((-1, self.target_dim))
@@ -50,4 +46,4 @@ class TwoCornersPM(PositionModel):
 
         iou = intersect / union
 
-        return iou.reshape(gtps[:-1]+(1,))
+        return iou.reshape(gtp_shape[:-1]+(1,))

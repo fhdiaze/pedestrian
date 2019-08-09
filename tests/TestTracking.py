@@ -7,9 +7,11 @@ from pedestrian.position.TwoCornersPM import TwoCornersPM
 from pedestrian.tracking.Sort import Sort
 from PIL import Image, ImageDraw
 
-# VARS
+# PIPELINE VARIABLES
 # detector = YoloV3Coco()
 tracker = Sort()
+
+# ENVIRONMENT VARIABLES
 #det_name = type(detector).__name__
 in_path = "/home/investigacion/Pictures/InputImages"
 out_path = "/home/investigacion/Pictures/OutputImages"
@@ -28,10 +30,10 @@ if not cap.isOpened():
 
 width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))  # float
 height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))  # float
-size = (width, height)
 t_range = np.array([[0.0, width], [0.0, height]])
 tracks = []
-with cv2.VideoWriter(filename="C:/Users/kuby/Downloads/Ch4_out.mp4", apiPreference=cv2.CAP_FFMPEG, fourcc=cv2.VideoWriter_fourcc(*"DIVX"), fps=15, frameSize=size) as out:
+
+with cv2.VideoWriter("C:/Users/kuby/Downloads/Ch4_out.mp4", cv2.CAP_FFMPEG, cv2.VideoWriter_fourcc(*"DIVX"), 15, (width, height)) as out:
     f = 0
     while cap.isOpened() and f < 3:
         ret, frame = cap.read()

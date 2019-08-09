@@ -17,7 +17,4 @@ class YoloV3Coco(Detector):
             boxes = self.model.get_boxes(preds, frame.shape[1:3])
             boxes = np.array(boxes[self.cocoPersonClass])
 
-            if boxes.size != 0:
-                boxes = boxes[:, :4]
-
         return boxes
