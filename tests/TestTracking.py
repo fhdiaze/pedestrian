@@ -2,38 +2,34 @@ import numpy as np
 import os
 import cv2
 # from pedestrian.detection.YoloV3Voc import YoloV3Voc
-# from pedestrian.detection.YoloV3Coco import YoloV3Coco
+from pedestrian.detection.YoloV3Coco import YoloV3Coco
 from pedestrian.position.TwoCornersPM import TwoCornersPM
 from pedestrian.tracking.Sort import Sort
 from PIL import Image, ImageDraw
 
-# PIPELINE VARIABLES
-# detector = YoloV3Coco()
+# Pipeline Variables
+in_size = (416, 416)
+s_range = np.array([[0.0, in_size[0]], [0.0, in_size[1]]])
+outline = "blue"
+detector = YoloV3Coco()
+pm = TwoCornersPM()
 tracker = Sort()
 
-# ENVIRONMENT VARIABLES
-#det_name = type(detector).__name__
-in_path = "/home/investigacion/Pictures/InputImages"
-out_path = "/home/investigacion/Pictures/OutputImages"
-img_name = "TM_evasores_00008.jpg"
-#out_img_name = det_name + "Box" + img_name
-outline = "blue"
-in_size = np.array([416, 416])
-s_range = np.array([[0.0, in_size[0]], [0.0, in_size[1]]])
+# Environment Variables
+in_path = "C:/Users/kuby/Downloads"
+out_path = "C:/Users/kuby/Downloads"
+in_name = "Ch4_20181029060955.mp4"
+out_name = "Box_" + in_name
+in_video = os.path.join(in_path, in_name)
+out_video = os.path.join(out_path, out_name)
 
-# Video processing
-cap = cv2.VideoCapture("C:/Users/kuby/Downloads/Ch4_20181029060955.mp4")
+# Loading Video
+cap = cv2.VideoCapture(os.path.join(in_path, in_name))
+video_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+video_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+t_range = np.array([[0.0, video_width], [0.0, video_height]])
 
-# Check if camera opened successfully
-if not cap.isOpened():
-    print("Error opening video stream or file")
-
-width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))  # float
-height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))  # float
-t_range = np.array([[0.0, width], [0.0, height]])
-tracks = []
-
-with cv2.VideoWriter("C:/Users/kuby/Downloads/Ch4_out.mp4", cv2.CAP_FFMPEG, cv2.VideoWriter_fourcc(*"DIVX"), 15, (width, height)) as out:
+with cv2.VideoWriter(in_video, cv2.CAP_FFMPEG, cv2.VideoWriter_fourcc(*"DIVX"), 15, (video_width, video_height)) as out:
     f = 0
     while cap.isOpened() and f < 3:
         ret, frame = cap.read()
@@ -42,22 +38,18 @@ with cv2.VideoWriter("C:/Users/kuby/Downloads/Ch4_out.mp4", cv2.CAP_FFMPEG, cv2.
             img = Image.fromarray(frame)
             in_img = img.resize(in_size)
             in_tensor = np.array(in_img, dtype=np.float32).reshape(-1, in_size[0], in_size[1], 3)
-            # dets = detector.detect(frame)
-            # tracks = tracker.update(dets)
+            boxes = detector.detect(frame)
+            # boxes[:, :4] = pm.scale(boxes[:, :4], s_range, t_range)
+            # tracks = tracker.update(boxes)
 
-            # boxes = detector.detect(in_tensor)
-            pm = TwoCornersPM()
-            #boxes = pm.scale(boxes, s_range, t_range)
-
-            #for box in boxes:
-            #    pm.plot(img, list(box), outline)
+            #for track in tracks:
+            #    pm.plot(img, list(track), outline)
 
             out.write(np.array(img, dtype=np.float32))
 
     # When everything done, release the video capture and video write objects
     out.release()
     cap.release()
-
 
 # Closes all the frames
 cv2.destroyAllWindows()

@@ -7,7 +7,7 @@ class Detector(object):
         """Finds pedestrians in a frame
 
         :param np.ndarray frame: (h, w, 3)
-        :return: (samples, [score, x1, y1, x2, y2])
+        :return: (samples, [x1, y1, x2, y2, score])
         :rtype: np.ndarray
         """
         pass
