@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from PIL import Image
 
-# from pedestrian.detection.YoloV3Voc import YoloV3Voc
+from pedestrian.detection.YoloV3Voc import YoloV3Voc
 # from pedestrian.detection.YoloV3Coco import YoloV3Coco
 from pedestrian.position.TwoCornersPM import TwoCornersPM
 from pedestrian.tracking.Sort import Sort
@@ -12,7 +12,7 @@ from pedestrian.tracking.Sort import Sort
 in_size = (416, 416)
 s_range = np.array([[0.0, in_size[0]], [0.0, in_size[1]]])
 outline = "blue"
-# detector = YoloV3Coco()
+detector = YoloV3Voc()
 pm = TwoCornersPM()
 tracker = Sort()
 
@@ -29,7 +29,7 @@ cap = cv2.VideoCapture(os.path.join(in_path, in_name))
 video_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 video_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 t_range = np.array([[0.0, video_width], [0.0, video_height]])
-out = cv2.VideoWriter(out_video, cv2.CAP_GSTREAMER, cv2. VideoWriter_fourcc(*"DIVX"), 15, (video_width, video_height))
+out = cv2.VideoWriter(out_video, cv2.CAP_FFMPEG, cv2. VideoWriter_fourcc(*"MP4V"), 15, (video_width, video_height))
 
 f = 0
 while cap.isOpened() and f < 3:
@@ -39,7 +39,8 @@ while cap.isOpened() and f < 3:
         img = Image.fromarray(frame)
         in_img = img.resize(in_size)
         in_tensor = np.array(in_img, dtype=np.float32).reshape(-1, in_size[0], in_size[1], 3)
-        # boxes = detector.detect(frame)
+        print(in_tensor.shape)
+        # boxes = detector.detect(in_tensor)
         # boxes[:, :4] = pm.scale(boxes[:, :4], s_range, t_range)
         # tracker.update(boxes)
         # tracks = tracker.predict()
