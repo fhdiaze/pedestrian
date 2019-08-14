@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image
 
 from pedestrian.detection.YoloV3Voc import YoloV3Voc
-# from pedestrian.detection.YoloV3Coco import YoloV3Coco
+from pedestrian.detection.YoloV3Coco import YoloV3Coco
 from pedestrian.position.TwoCornersPM import TwoCornersPM
 from pedestrian.tracking.Sort import Sort
 
@@ -17,10 +17,12 @@ pm = TwoCornersPM()
 tracker = Sort()
 
 # Environment Variables
-in_path = "/home/investigacion/Downloads/"
-out_path = "/home/investigacion/Downloads/"
-in_name = "Ch1_20181118165748.mp4"
-out_name = "Box_" + in_name
+# in_path = "/home/investigacion/Downloads/"
+in_path = "C:/Users/kuby/Downloads/"
+# out_path = "/home/investigacion/Downloads/"
+out_path = "C:/Users/kuby/Downloads/"
+in_name = "Ch1_20181118175157.mp4"
+out_name = "Box_" + "A.wmv" #in_name
 in_video = os.path.join(in_path, in_name)
 out_video = os.path.join(out_path, out_name)
 
@@ -29,7 +31,7 @@ cap = cv2.VideoCapture(os.path.join(in_path, in_name))
 video_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 video_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 t_range = np.array([[0.0, video_width], [0.0, video_height]])
-out = cv2.VideoWriter(out_video, cv2.CAP_FFMPEG, cv2. VideoWriter_fourcc(*"MP4V"), 15, (video_width, video_height))
+out = cv2.VideoWriter(out_video, cv2. VideoWriter_fourcc(*"MJPG"), 15, (video_width, video_height))
 
 f = 0
 while cap.isOpened() and f < 3:
@@ -39,16 +41,16 @@ while cap.isOpened() and f < 3:
         img = Image.fromarray(frame)
         in_img = img.resize(in_size)
         in_tensor = np.array(in_img, dtype=np.float32).reshape(-1, in_size[0], in_size[1], 3)
-        print(in_tensor.shape)
-        # boxes = detector.detect(in_tensor)
-        # boxes[:, :4] = pm.scale(boxes[:, :4], s_range, t_range)
-        # tracker.update(boxes)
-        # tracks = tracker.predict()
 
-        #for track in tracks:
-        #    pm.plot(img, list(track), outline)
+        boxes = detector.detect(in_tensor)
+        boxes[:, :4] = pm.scale(boxes[:, :4], s_range, t_range)
+        tracker.update(boxes)
+        tracks = tracker.predict()
 
-        out.write(np.array(img, dtype=np.float32))
+        for track in tracks:
+            pm.plot(img, list(track), outline)
+
+        out.write(np.array(img))
 
 # When everything done, release the video capture and video write objects
 out.release()
