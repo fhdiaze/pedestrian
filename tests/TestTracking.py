@@ -22,16 +22,16 @@ tracker = Sort()
 
 # Environment Variables
 # in_path = "/home/investigacion/Downloads/"
-in_path = "C:/Users/kuby/Downloads/Input/"
+in_path = "C:/Users/kuby/Documents/Fredy/Input/"
 # out_path = "/home/investigacion/Downloads/"
-out_path = "C:/Users/kuby/Downloads/Output/"
+out_path = "C:/Users/kuby/Documents/Fredy/Output/"
 in_name = "Ch2_20181110121206.mp4"
 out_name = "Box_" + os.path.splitext(in_name)[0] + ".avi"
 in_video = os.path.join(in_path, in_name)
 out_video = os.path.join(out_path, out_name)
 out_fps = 30
-
-COLORS = np.random.uniform(0, 255, size=(100, 3))
+max_ids = 100
+colors = np.random.uniform(0, 255, size=(max_ids, 3))
 
 # Loading Video
 cap = cv2.VideoCapture(os.path.join(in_path, in_name))
@@ -53,8 +53,8 @@ while cap.isOpened() and f < 1000:
 
         tracks = tracker.track(boxes.astype("int"))
 
-        for track in tracks:
-            pm.plot(bgr_frame, track[:-1].astype("int"), COLORS[1])
+        for track in tracks.astype("int"):
+            pm.plot(bgr_frame, track[:-1], colors[track[-1] % max_ids])
 
         out.write(bgr_frame)
 

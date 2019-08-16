@@ -17,8 +17,11 @@ class PositionModel(object):
         """
         pass
 
-    # position.shape = (batchSize, seqLength, target_dim(x1, y1, x2, y2))
     def to_two_corners(self, position):
+        """Convert a position to two corners format
+
+        :param np.ndarray position: (batchSize, seqLength, target_dim(x1, y1, x2, y2))
+        """
         pass
 
     def plot(self, frame, position, color: tuple):

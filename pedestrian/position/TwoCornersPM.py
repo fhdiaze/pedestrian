@@ -16,15 +16,17 @@ class TwoCornersPM(PositionModel):
     def to_two_corners(self, position):
         return position
 
-    def plot(self, frame, position, color: tuple):
+    def plot(self, frame, position, color: tuple, thickness: int = 2):
         """ Plot (in side) the position in a frame.
+
 
         :param np.ndarray frame: The frame in BGR
         :param np.ndarray position: The objects's corners coordinates [x1, y1, x2, y2]
         :param tuple color: The BGR code of position's color.
+        :param thickness:
         """
         (x1, y1, x2, y2) = position
-        cv2.rectangle(frame, (x1, y1), (x2, y2), color, 1)
+        cv2.rectangle(frame, (x1, y1), (x2, y2), color, thickness)
 
     # gtPosition.shape = (batchSize, seqLength, target_dim(x1, y1, x2, y2))
     def iou(self, gt_position, pred_position):
