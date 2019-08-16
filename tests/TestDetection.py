@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import cv2
 from pedestrian.detection.YoloV3Voc import YoloV3Voc
 from pedestrian.detection.YoloV3Coco import YoloV3Coco
 from pedestrian.detection.MobileSSD import MobileSSD
@@ -20,18 +21,12 @@ out_name = det_name + "Box" + in_name
 outline = "blue"
 pm = TwoCornersPM()
 
-with Image.open(os.path.join(in_path, in_name)) as img:
+frame = cv2.imread(os.path.join(in_path, in_name))
+rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+boxes = detector.detect(rgb_frame)
 
-    # Variables
-    width, height = img.size
-    s_range = np.array([[0.0, detector.in_size[0]], [0.0, detector.in_size[1]]])
-    t_range = np.array([[0.0, width], [0.0, height]])
-    in_tensor = np.array(img, dtype=np.float32)
+if boxes.size != 0:
+    for box in boxes[:, :4]:
+        pm.plot(frame, box.astype("int"), (255, 0, 0))
 
-    boxes = detector.detect(in_tensor)
-
-    if boxes.size != 0:
-        for box in boxes[:, :4]:
-            pm.plot(img, list(box), outline)
-
-        img.save(os.path.join(out_path, out_name))
+    cv2.imwrite(os.path.join(out_path, out_name), frame)

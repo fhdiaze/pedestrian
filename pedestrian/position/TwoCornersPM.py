@@ -1,5 +1,5 @@
+import cv2
 import numpy as np
-from PIL import ImageDraw
 from pedestrian.position.PositionModel import PositionModel
 
 
@@ -16,15 +16,15 @@ class TwoCornersPM(PositionModel):
     def to_two_corners(self, position):
         return position
 
-    def plot(self, frame, position, outline: str):
+    def plot(self, frame, position, color: tuple):
         """ Plot (in side) the position in a frame.
 
-        :param PIL.Image frame: The frame
-        :param [integer, integer, integer, integer] position: The objects's corners coordinates [x1, y1, x2, y2]
-        :param str outline:  The name of the position color.
+        :param np.ndarray frame: The frame in BGR
+        :param np.ndarray position: The objects's corners coordinates [x1, y1, x2, y2]
+        :param tuple color: The BGR code of position's color.
         """
-        draw = ImageDraw.Draw(frame)
-        draw.rectangle(position, outline=outline)
+        (x1, y1, x2, y2) = position
+        cv2.rectangle(frame, (x1, y1), (x2, y2), color, 1)
 
     # gtPosition.shape = (batchSize, seqLength, target_dim(x1, y1, x2, y2))
     def iou(self, gt_position, pred_position):

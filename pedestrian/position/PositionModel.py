@@ -21,17 +21,13 @@ class PositionModel(object):
     def to_two_corners(self, position):
         pass
 
-    """
-    Plot (inside) the position in a frame. 
-    @type  frame:    PIL.Image
-    @param frame:    The frame
-    @type  position: object
-    @param position: The objects's position representation
-    @type  outline:  string
-    @param outline:  The name of the position color.
-    """
+    def plot(self, frame, position, color: tuple):
+        """ Plot (inside) the position in a frame.
 
-    def plot(self, frame, position, outline):
+            :param np.ndarray frame: The frame in BGR
+            :param np.ndarray position: The objects's position representation
+            :param tuple color: The BGR code of position's color.
+        """
         pass
 
     # theta.shape = (batchSize, 3, 3)
@@ -53,15 +49,12 @@ class PositionModel(object):
 
         return position
 
-    # position = [..., coordinates]
-    # sRange = [[xMin, xMax], [yMin, yMax]]
-    # tRange = [[xMin, xMax], [yMin, yMax]]
     def scale(self, position, s_range, t_range):
-        """
-        Scale a position from source range to target range
-        :param position:
-        :param s_range: The source range
-        :param t_range: The target range
+        """ Scale a position from source range to target range
+
+        :param position: [..., coordinates]
+        :param s_range: The source range [[xMin, xMax], [yMin, yMax]]
+        :param t_range: The target range [[xMin, xMax], [yMin, yMax]]
         :return:
         """
         shape = position.shape

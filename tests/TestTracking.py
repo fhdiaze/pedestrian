@@ -11,7 +11,7 @@ from pedestrian.position.TwoCornersPM import TwoCornersPM
 from pedestrian.tracking.Sort import Sort
 
 # Pipeline Variables
-det_period = 10
+det_period = 1
 outline = "blue"
 proto = "C:/Users/kuby/Downloads/object-detection-deep-learning/MobileNetSSD_deploy.prototxt.txt"
 model = "C:/Users/kuby/Downloads/object-detection-deep-learning/MobileNetSSD_deploy.caffemodel"
@@ -22,10 +22,10 @@ tracker = Sort()
 
 # Environment Variables
 # in_path = "/home/investigacion/Downloads/"
-in_path = "C:/Users/kuby/Downloads/"
+in_path = "C:/Users/kuby/Downloads/Input/"
 # out_path = "/home/investigacion/Downloads/"
-out_path = "C:/Users/kuby/Downloads/"
-in_name = "Ch4_20181029060955.mp4"
+out_path = "C:/Users/kuby/Downloads/Output/"
+in_name = "Ch2_20181110121206.mp4"
 out_name = "Box_" + os.path.splitext(in_name)[0] + ".avi"
 in_video = os.path.join(in_path, in_name)
 out_video = os.path.join(out_path, out_name)
@@ -51,11 +51,10 @@ while cap.isOpened() and f < 1000:
             rgb_frame = cv2.cvtColor(bgr_frame, cv2.COLOR_BGR2RGB)
             boxes = detector.detect(rgb_frame)
 
-        tracks = tracker.track(boxes)
+        tracks = tracker.track(boxes.astype("int"))
 
-        for track in boxes:
-            (x1, y1, x2, y2, idx) = track
-            cv2.rectangle(bgr_frame, (x1, y1), (x2, y2), COLORS[1], 2)
+        for track in tracks:
+            pm.plot(bgr_frame, track[:-1].astype("int"), COLORS[1])
 
         out.write(bgr_frame)
 
