@@ -3,16 +3,20 @@ import cv2
 import numpy as np
 from PIL import Image
 from PIL import ImageColor
+
+from pedestrian.detection.MobileSSD import MobileSSD
 from pedestrian.detection.YoloV3Voc import YoloV3Voc
 from pedestrian.detection.YoloV3Coco import YoloV3Coco
 from pedestrian.position.TwoCornersPM import TwoCornersPM
 from pedestrian.tracking.Sort import Sort
 
 # Pipeline Variables
-in_size = (416, 416)
-s_range = np.array([[0.0, in_size[0]], [0.0, in_size[1]]])
+det_period = 30
 outline = "blue"
-detector = YoloV3Voc()
+proto = "C:/Users/kuby/Downloads/object-detection-deep-learning/MobileNetSSD_deploy.prototxt.txt"
+model = "C:/Users/kuby/Downloads/object-detection-deep-learning/MobileNetSSD_deploy.caffemodel"
+confidence = 0.2
+detector = MobileSSD(proto, model, confidence)
 pm = TwoCornersPM()
 tracker = Sort()
 
@@ -21,10 +25,12 @@ tracker = Sort()
 in_path = "C:/Users/kuby/Downloads/"
 # out_path = "/home/investigacion/Downloads/"
 out_path = "C:/Users/kuby/Downloads/"
-in_name = "Ch1_20181118175157.mp4"
+in_name = "Ch4_20181029060955.mp4"
 out_name = "Box_" + os.path.splitext(in_name)[0] + ".wmv"
 in_video = os.path.join(in_path, in_name)
 out_video = os.path.join(out_path, out_name)
+
+COLORS = np.random.uniform(0, 255, size=(100, 3))
 
 # Loading Video
 cap = cv2.VideoCapture(os.path.join(in_path, in_name))
@@ -34,25 +40,27 @@ t_range = np.array([[0.0, video_width], [0.0, video_height]])
 out = cv2.VideoWriter(out_video, cv2. VideoWriter_fourcc(*"MJPG"), 5, (video_width, video_height))
 
 f = 0
-while cap.isOpened() and f < 3:
-    ret, frame = cap.read()
-    f += 1
+while cap.isOpened():
+    print(f)
+    ret, bgr_frame = cap.read()
+    rgb_frame = cv2.cvtColor(bgr_frame, cv2.COLOR_BGR2RGB)
+
     if ret:
-        img = Image.fromarray(frame)
-        in_img = img.resize(in_size)
-        in_tensor = np.array(in_img, dtype=np.float32).reshape(-1, in_size[0], in_size[1], 3)
+        boxes = np.empty((0, 0))
 
-        boxes = detector.detect(in_tensor)
+        if f % det_period == 0:
+            boxes = detector.detect(rgb_frame)
 
-        if boxes.size != 0:
-            boxes[:, :4] = pm.scale(boxes[:, :4], s_range, t_range)
-
-        tracks = tracker.update(boxes)
+        tracks = tracker.track(boxes)
 
         for track in tracks:
-            pm.plot(img, list(track[:-1]), list(ImageColor.colormap.keys())[int(track[-1])])
+            (x1, y1, x2, y2, idx) = track
+            cv2.rectangle(bgr_frame, (x1, y1), (x2, y2), COLORS[idx], 2)
 
-        out.write(np.array(img))
+        box_bgr_frame = cv2.cvtColor(bgr_frame, cv2.COLOR_RGB2BGR)
+        out.write(box_bgr_frame)
+
+    f += 1
 
 # When everything done, release the video capture and video write objects
 out.release()

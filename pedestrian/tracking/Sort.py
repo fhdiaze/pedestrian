@@ -2,6 +2,8 @@ import numpy as np
 from filterpy.kalman import KalmanFilter
 from sklearn.utils.linear_assignment_ import linear_assignment
 #from scipy.optimize import linear_sum_assignment as linear_assignment
+from pedestrian.tracking.Tracker import Tracker
+
 
 def iou(bb_test, bb_gt):
     """
@@ -151,7 +153,7 @@ def associate_detections_to_trackers(detections, trackers, iou_threshold=0.3):
     return matches, np.array(unmatched_detections), np.array(unmatched_trackers)
 
 
-class Sort(object):
+class Sort(Tracker):
     def __init__(self, max_age=1, min_hits=3):
         """
         Sets key parameters for SORT
@@ -161,14 +163,7 @@ class Sort(object):
         self.trackers = []
         self.frame_count = 0
 
-    def update(self, dets):
-        """
-        Params:
-          dets - a numpy array of detections in the format [[x1,y1,x2,y2,score],[x1,y1,x2,y2,score],...]
-        Requires: this method must be called once for each frame even with empty detections.
-        Returns the a similar array, where the last column is the object ID.
-        NOTE: The number of objects returned may differ from the number of detections provided.
-        """
+    def track(self, dets):
         self.frame_count += 1
         # get predicted locations from existing trackers.
         trks = np.zeros((len(self.trackers), 5))
@@ -184,11 +179,11 @@ class Sort(object):
             self.trackers.pop(t)
         matched, unmatched_dets, unmatched_trks = associate_detections_to_trackers(dets, trks)
 
-        # update matched trackers with assigned detections
+        # track matched trackers with assigned detections
         for t, trk in enumerate(self.trackers):
             if t not in unmatched_trks:
                 d = matched[np.where(matched[:, 1] == t)[0], 0]
-                trk.update(dets[d, :][0])
+                trk.track(dets[d, :][0])
 
         # create and initialise new trackers for unmatched detections
         for i in unmatched_dets:
