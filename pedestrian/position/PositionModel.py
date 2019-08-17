@@ -6,13 +6,10 @@ class PositionModel(object):
     def __init__(self, target_dim):
         self.target_dim = target_dim
 
-    def get_target_dim(self):
-        return self.target_dim
-
     def from_two_corners(self, position):
         """Transform positions from two corners format to another format
 
-        :param position: (batchSize, seqLength, target_dim(x1, y1, x2, y2))
+        :param position: (batchSize, seqLength, target_dim)
         :return:
         """
         pass
@@ -20,16 +17,17 @@ class PositionModel(object):
     def to_two_corners(self, position):
         """Convert a position to two corners format
 
-        :param np.ndarray position: (batchSize, seqLength, target_dim(x1, y1, x2, y2))
+        :param np.ndarray position: (batchSize, seqLength, target_dim)
         """
         pass
 
-    def plot(self, frame, position, color: tuple):
-        """ Plot (inside) the position in a frame.
+    def plot(self, frame, position, color: tuple, thickness: int):
+        """Plot (inside) the position in a frame.
 
-            :param np.ndarray frame: The frame in BGR
-            :param np.ndarray position: The objects's position representation
-            :param tuple color: The BGR code of position's color.
+        :param np.ndarray frame: The frame in BGR
+        :param np.ndarray position: The objects's position representation
+        :param tuple color: The BGR code of position's color.
+        :param int thickness:
         """
         pass
 

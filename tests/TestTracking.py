@@ -51,7 +51,7 @@ while cap.isOpened() and f < 1000:
             rgb_frame = cv2.cvtColor(bgr_frame, cv2.COLOR_BGR2RGB)
             boxes = detector.detect(rgb_frame)
 
-        tracks = tracker.track(boxes.astype("int"))
+        tracks = tracker.track(rgb_frame, boxes.astype("int"))
 
         for track in tracks.astype("int"):
             pm.plot(bgr_frame, track[:-1], colors[track[-1] % max_ids])

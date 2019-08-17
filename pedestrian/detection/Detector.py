@@ -6,7 +6,7 @@ class Detector(object):
     def detect(self, frame):
         """Finds pedestrians in a frame
 
-        :param np.ndarray frame: (h, w, [R, G, B])
+        :param np.ndarray frame: BGR format
         :return: (samples, [x1, y1, x2, y2, score])
         :rtype: np.ndarray
         """

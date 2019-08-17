@@ -17,9 +17,8 @@ class MobileSSD(Detector):
         self.s_range = np.array([[0.0, 1.0], [0.0, 1.0]])
 
     def detect(self, frame):
-        image = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-        (h, w) = image.shape[:2]
-        blob = cv2.dnn.blobFromImage(cv2.resize(image, self.in_size), 0.007843, self.in_size, 127.5)
+        (h, w) = frame.shape[:2]
+        blob = cv2.dnn.blobFromImage(cv2.resize(frame, self.in_size), 0.007843, self.in_size, 127.5)
         self.ssd.setInput(blob)
         detections = self.ssd.forward() # [?, ?, num_detections, [?, class, confidence, x1, y1, x2, y2]]
         f = (detections[0, 0, :, 1] == self.person_class) & (detections[0, 0, :, 2] > self.confidence)

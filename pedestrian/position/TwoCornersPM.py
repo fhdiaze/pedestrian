@@ -8,22 +8,28 @@ class TwoCornersPM(PositionModel):
     def __init__(self):
         super(TwoCornersPM, self).__init__(4)
 
-    # position.shape = (batchSize, seqLength, target_dim(x1, y1, x2, y2))
     def from_two_corners(self, position):
+        """Transform positions from two corners format to another format
+
+        :param position: (batchSize, seqLength, [x1, y1, x2, y2])
+        :return: (batchSize, seqLength, [x1, y1, x2, y2])
+        """
         return position
 
-    # position.shape = (batchSize, seqLength, target_dim(x1, y1, x2, y2))
     def to_two_corners(self, position):
+        """Convert a position to two corners format
+
+        :param np.ndarray position: (batchSize, seqLength, [x1, y1, x2, y2])
+        """
         return position
 
     def plot(self, frame, position, color: tuple, thickness: int = 2):
-        """ Plot (in side) the position in a frame.
-
+        """Plot (in side) the position in a frame.
 
         :param np.ndarray frame: The frame in BGR
         :param np.ndarray position: The objects's corners coordinates [x1, y1, x2, y2]
         :param tuple color: The BGR code of position's color.
-        :param thickness:
+        :param int thickness:
         """
         (x1, y1, x2, y2) = position
         cv2.rectangle(frame, (x1, y1), (x2, y2), color, thickness)

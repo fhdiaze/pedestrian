@@ -1,0 +1,41 @@
+import numpy as np
+from pedestrian.position.CentroidPM import CentroidPM
+
+
+class Track(object):
+    __slots__ = ["tid", "positions", "counted", "cpm"]
+    UP = 1
+    DOWN = -1
+    STATIC = 0
+
+    def __init__(self, tid: int, position):
+        self.tid = tid
+        self.positions = position
+        self.counted = False
+        self.cpm = CentroidPM(1.0, 1.0)
+
+    def add(self, position):
+        self.positions = np.vstack([self.positions, position])
+
+    def direction(self):
+        centroids = self.cpm.from_two_Corners(self.positions)
+        direction = Track.UP
+
+        if centroids.shape[0] > 1:
+            if centroids[-1, 1] - np.mean(centroids[:-1, 1]) > 0:
+                direction = Track.DOWN
+        else:
+            direction = Track.STATIC
+
+        return direction
+
+    def intersect(self, line):
+        r = False
+        centroids = self.cpm.from_two_Corners(self.positions)
+        pi = centroids[0, :]
+        direction = self.direction()
+
+        if (direction == Track.UP and line[0, 1] > centroids[-1, 1]) or (direction == Track.DOWN and line[0, 1] < centroids[-1, 1]):
+            r = True
+
+        return r

@@ -5,6 +5,5 @@ opencv
 cython
 matplotlib
 filterpy
-pillow
 tensornets
 scikit-learn
