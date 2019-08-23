@@ -11,7 +11,7 @@ class CentroidPM(PositionModel):
         self.width = width
 
     # position.shape = (batchSize, seqLength, targetDim(x1, y1, x2, y2))
-    def from_two_Corners(self, position):
+    def from_two_corners(self, position):
         shape = position.shape
         position = position.reshape((-1, 2, 2))
         centroid = np.sum(position, axis=1) / 2.0

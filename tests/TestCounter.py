@@ -4,17 +4,20 @@ import numpy as np
 from pedestrian.counting.Counter import Counter
 from pedestrian.detection.MobileSSD import MobileSSD
 from pedestrian.position.TwoCornersPM import TwoCornersPM
-from pedestrian.tracking.Sort import Sort
+from pedestrian.tracking.DistanceConnector import DistanceConnector
+from pedestrian.tracking.multiple.Centroid import Centroid
+from pedestrian.tracking.multiple.Sort import Sort
 
 # Pipeline Variables
-det_period = 1
+det_period = 5
 out_fps = 30
 proto = "C:/Users/kuby/Downloads/object-detection-deep-learning/MobileNetSSD_deploy.prototxt.txt"
 model = "C:/Users/kuby/Downloads/object-detection-deep-learning/MobileNetSSD_deploy.caffemodel"
 confidence = 0.2
 detector = MobileSSD(proto, model, confidence)
 pm = TwoCornersPM()
-tracker = Sort()
+connector = DistanceConnector()
+tracker = Centroid(connector)
 counter = Counter(detector, det_period, tracker)
 
 # Environment Variables
@@ -22,7 +25,7 @@ counter = Counter(detector, det_period, tracker)
 in_path = "C:/Users/kuby/Documents/Fredy/Input/"
 # out_path = "/home/investigacion/Downloads/"
 out_path = "C:/Users/kuby/Documents/Fredy/Output/"
-in_name = "Ch2_20181110121206.mp4"
+in_name = "example_02.mp4"
 out_name = "Count_" + os.path.splitext(in_name)[0] + ".avi"
 in_video = os.path.join(in_path, in_name)
 out_video = os.path.join(out_path, out_name)

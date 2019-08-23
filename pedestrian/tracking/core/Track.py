@@ -3,7 +3,6 @@ from pedestrian.position.CentroidPM import CentroidPM
 
 
 class Track(object):
-    __slots__ = ["tid", "positions", "counted", "cpm"]
     UP = 1
     DOWN = -1
     STATIC = 0
@@ -11,8 +10,9 @@ class Track(object):
     MIN_MOVE = 8
     COLORS = np.random.uniform(0, 255, size=(MAX_TRACKS, 3))
 
-    def __init__(self, tid: int, position):
-        self.tid = tid
+    __slots__ = ["positions", "counted", "cpm"]
+
+    def __init__(self, position):
         self.positions = position
         self.counted = False
         self.cpm = CentroidPM(1.0, 1.0)

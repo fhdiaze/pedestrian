@@ -2,8 +2,7 @@ import numpy as np
 from filterpy.kalman import KalmanFilter
 from scipy.optimize import linear_sum_assignment as linear_assignment
 
-from pedestrian.tracking.DistanceConnector import DistanceConnector
-from pedestrian.tracking.Tracker import Tracker
+from pedestrian.tracking.multiple.Tracker import Tracker
 
 
 def iou(bb_test, bb_gt):
@@ -151,8 +150,8 @@ def associate_detections_to_trackers(detections, trackers, iou_threshold=0.3):
 class Sort(Tracker):
     def __init__(self, max_age=1, min_hits=3):
         """
-    Sets key parameters for SORT
-    """
+        Sets key parameters for SORT
+        """
         self.max_age = max_age
         self.min_hits = min_hits
         self.trackers = []

@@ -1,15 +1,11 @@
 import os
 import cv2
 import numpy as np
-from PIL import Image
-from PIL import ImageColor
 
 from pedestrian.detection.MobileSSD import MobileSSD
-from pedestrian.detection.YoloV3Voc import YoloV3Voc
-from pedestrian.detection.YoloV3Coco import YoloV3Coco
 from pedestrian.position.TwoCornersPM import TwoCornersPM
-from pedestrian.tracking import Track
-from pedestrian.tracking.Sort import Sort
+from pedestrian.tracking.core import Track
+from pedestrian.tracking.multiple.Sort import Sort
 
 # Pipeline Variables
 det_period = 1
