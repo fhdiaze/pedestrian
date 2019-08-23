@@ -1,3 +1,4 @@
+import cv2
 import numpy as np
 from pedestrian.position.PositionModel import PositionModel
 
@@ -34,31 +35,17 @@ class CentroidPM(PositionModel):
 
         return new_position
 
-    """
-    Plot (inside) the position in a frame. 
-    @type  frame:    PIL.Image
-    @param frame:    The frame
-    @type  position: [integer, integer]
-    @param position: The objects's centroid coordinates (x, y)
-    @type  outline:  string
-    @param outline:  The name of the position color.
-    """
-
-    def plot(self, frame, position, outline):
+    def plot(self, frame, position, color: tuple, idx: str = None, thickness: int = 2):
         """Plot (in side) the position in a frame.
 
         :param np.ndarray frame: The frame in BGR
-        :param np.ndarray position: The objects's corners coordinates [x1, y1, x2, y2]
+        :param np.ndarray position: The objects's corners coordinates [x1, y1]
         :param tuple color: The BGR code of position's color.
+        :param str idx: the position's id
         :param int thickness:
         """
-        draw = ImageDraw.Draw(frame)
-        w, h = frame.size
-        x = position[0]
-        y = position[1]
-        draw.line([x, 0, x, h], fill=outline)
-        draw.line([0, y, w, y], fill=outline)
-
-
-        (x1, y1, x2, y2) = position
-        cv2.rectangle(frame, (x1, y1), (x2, y2), color, thickness)
+        x, y = position.astype("int")
+        if idx is not None:
+            text = "ID: {}".format(idx)
+            cv2.putText(frame, text, (x - 10, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, thickness)
+        cv2.circle(frame, (x, y), 4, color, thickness)

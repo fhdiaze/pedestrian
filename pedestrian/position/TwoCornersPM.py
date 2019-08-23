@@ -23,19 +23,25 @@ class TwoCornersPM(PositionModel):
         """
         return position
 
-    def plot(self, frame, position, color: tuple, thickness: int = 2):
-        """Plot (in side) the position in a frame.
+    def plot(self, frame, position, color: tuple, idx: str = None, thickness: int = 2):
+        """Plots (in side) the position in a frame.
 
         :param np.ndarray frame: The frame in BGR
         :param np.ndarray position: The objects's corners coordinates [x1, y1, x2, y2]
         :param tuple color: The BGR code of position's color.
+        :param str idx: the position's id
         :param int thickness:
         """
         (x1, y1, x2, y2) = position
         cv2.rectangle(frame, (x1, y1), (x2, y2), color, thickness)
 
-    # gtPosition.shape = (batchSize, seqLength, target_dim(x1, y1, x2, y2))
     def iou(self, gt_position, pred_position):
+        """Calculate the intersection over union of positions
+
+        :param gt_position: the ground truth position. (batchSize, seqLength, target_dim(x1, y1, x2, y2))
+        :param pred_position: the predicted position
+        :return:
+        """
         gtp_shape = gt_position.shape
 
         gt_position = gt_position.reshape((-1, self.target_dim))

@@ -7,6 +7,9 @@ class Track(object):
     UP = 1
     DOWN = -1
     STATIC = 0
+    MAX_TRACKS = 150
+    MIN_MOVE = 8
+    COLORS = np.random.uniform(0, 255, size=(MAX_TRACKS, 3))
 
     def __init__(self, tid: int, position):
         self.tid = tid
@@ -19,13 +22,14 @@ class Track(object):
 
     def direction(self):
         centroids = self.cpm.from_two_Corners(self.positions)
-        direction = Track.UP
+        direction = Track.STATIC
 
         if centroids.shape[0] > 1:
-            if centroids[-1, 1] - np.mean(centroids[:-1, 1]) > 0:
+            delta = centroids[-1, 1] - np.mean(centroids[:-1, 1])
+            if delta > Track.MIN_MOVE:
                 direction = Track.DOWN
-        else:
-            direction = Track.STATIC
+            elif delta < -Track.MIN_MOVE:
+                direction = Track.UP
 
         return direction
 
@@ -35,7 +39,12 @@ class Track(object):
         pi = centroids[0, :]
         direction = self.direction()
 
-        if (direction == Track.UP and line[0, 1] > centroids[-1, 1]) or (direction == Track.DOWN and line[0, 1] < centroids[-1, 1]):
+        if (direction == Track.UP and line[0, 1] > centroids[-1, 1] and np.any(centroids[:, 1] > line[0, 1]))\
+                or (direction == Track.DOWN and line[0, 1] < centroids[-1, 1] and np.any(centroids[:, 1] < line[0, 1])):
             r = True
 
         return r
+
+    @classmethod
+    def color(cls, idx: int):
+        return cls.COLORS[idx % cls.MAX_TRACKS]

@@ -8,6 +8,7 @@ from pedestrian.detection.MobileSSD import MobileSSD
 from pedestrian.detection.YoloV3Voc import YoloV3Voc
 from pedestrian.detection.YoloV3Coco import YoloV3Coco
 from pedestrian.position.TwoCornersPM import TwoCornersPM
+from pedestrian.tracking import Track
 from pedestrian.tracking.Sort import Sort
 
 # Pipeline Variables
@@ -26,7 +27,7 @@ in_path = "C:/Users/kuby/Documents/Fredy/Input/"
 # out_path = "/home/investigacion/Downloads/"
 out_path = "C:/Users/kuby/Documents/Fredy/Output/"
 in_name = "Ch2_20181110121206.mp4"
-out_name = "Box_" + os.path.splitext(in_name)[0] + ".avi"
+out_name = "Track_" + os.path.splitext(in_name)[0] + ".avi"
 in_video = os.path.join(in_path, in_name)
 out_video = os.path.join(out_path, out_name)
 out_fps = 30
@@ -54,7 +55,7 @@ while cap.isOpened() and f < 1000:
         tracks = tracker.track(rgb_frame, boxes.astype("int"))
 
         for track in tracks.astype("int"):
-            pm.plot(bgr_frame, track[:-1], colors[track[-1] % max_ids])
+            pm.plot(bgr_frame, track[:-1], Track.color(track[-1]))
 
         out.write(bgr_frame)
 

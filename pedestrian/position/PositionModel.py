@@ -21,18 +21,25 @@ class PositionModel(object):
         """
         pass
 
-    def plot(self, frame, position, color: tuple, thickness: int):
+    def plot(self, frame, position, color: tuple, idx: str, thickness: int):
         """Plot (inside) the position in a frame.
 
         :param np.ndarray frame: The frame in BGR
         :param np.ndarray position: The objects's position representation
         :param tuple color: The BGR code of position's color.
+        :param str idx: the position's id
         :param int thickness:
         """
         pass
 
-    # theta.shape = (batchSize, 3, 3)
-    def transform(self, theta, position):
+    @classmethod
+    def transform(cls, theta, position):
+        """
+
+        :param theta: the matrix of transformation [batchSize, 3, 3]
+        :param np.ndarray position: the positions [?, target]
+        :return: the positions tranformed using the theta transformation matrix
+        """
         position_shape = position.shape
         theta = theta.reshape((-1, 3, 3))
         samples = theta.shape[0]
@@ -50,8 +57,9 @@ class PositionModel(object):
 
         return position
 
-    def scale(self, position, s_range, t_range):
-        """ Scale a position from source range to target range
+    @classmethod
+    def scale(cls, position, s_range, t_range):
+        """Scale a position from source range to target range
 
         :param position: [..., coordinates]
         :param s_range: The source range [[xMin, xMax], [yMin, yMax]]

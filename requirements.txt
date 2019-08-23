@@ -2,8 +2,7 @@ cython
 numpy
 scipy
 opencv
-cython
 matplotlib
 filterpy
 tensornets
-scikit-learn
+dlib

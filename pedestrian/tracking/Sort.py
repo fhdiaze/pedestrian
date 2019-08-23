@@ -1,12 +1,14 @@
 import numpy as np
 from filterpy.kalman import KalmanFilter
-from sklearn.utils.linear_assignment_ import linear_assignment
+from scipy.optimize import linear_sum_assignment as linear_assignment
+
+from pedestrian.tracking.DistanceConnector import DistanceConnector
 from pedestrian.tracking.Tracker import Tracker
 
+
 def iou(bb_test, bb_gt):
+    """Computes IUO between two bboxes in the form [x1,y1,x2,y2]
     """
-  Computes IUO between two bboxes in the form [x1,y1,x2,y2]
-  """
     xx1 = np.maximum(bb_test[0], bb_gt[0])
     yy1 = np.maximum(bb_test[1], bb_gt[1])
     xx2 = np.minimum(bb_test[2], bb_gt[2])
@@ -16,15 +18,14 @@ def iou(bb_test, bb_gt):
     wh = w * h
     o = wh / ((bb_test[2] - bb_test[0]) * (bb_test[3] - bb_test[1])
               + (bb_gt[2] - bb_gt[0]) * (bb_gt[3] - bb_gt[1]) - wh)
-    return (o)
+    return o
 
 
 def convert_bbox_to_z(bbox):
-    """
-  Takes a bounding box in the form [x1,y1,x2,y2] and returns z in the form
+    """Takes a bounding box in the form [x1,y1,x2,y2] and returns z in the form
     [x,y,s,r] where x,y is the centre of the box and s is the scale/area and r is
     the aspect ratio
-  """
+    """
     w = bbox[2] - bbox[0]
     h = bbox[3] - bbox[1]
     x = bbox[0] + w / 2.
@@ -81,9 +82,8 @@ class KalmanBoxTracker(object):
         self.age = 0
 
     def update(self, bbox):
+        """Updates the state vector with observed bbox.
         """
-    Updates the state vector with observed bbox.
-    """
         self.time_since_update = 0
         self.history = []
         self.hits += 1
@@ -91,9 +91,8 @@ class KalmanBoxTracker(object):
         self.kf.update(convert_bbox_to_z(bbox))
 
     def predict(self):
+        """Advances the state vector and returns the predicted bounding box estimate.
         """
-    Advances the state vector and returns the predicted bounding box estimate.
-    """
         if ((self.kf.x[6] + self.kf.x[2]) <= 0):
             self.kf.x[6] *= 0.0
         self.kf.predict()
@@ -105,44 +104,43 @@ class KalmanBoxTracker(object):
         return self.history[-1]
 
     def get_state(self):
+        """Returns the current bounding box estimate.
         """
-    Returns the current bounding box estimate.
-    """
         return convert_x_to_bbox(self.kf.x)
 
 
 def associate_detections_to_trackers(detections, trackers, iou_threshold=0.3):
+    """Assigns detections to tracked object (both represented as bounding boxes)
+      Returns 3 lists of matches, unmatched_detections and unmatched_trackers
     """
-  Assigns detections to tracked object (both represented as bounding boxes)
-  Returns 3 lists of matches, unmatched_detections and unmatched_trackers
-  """
-    if (len(trackers) == 0):
+    if len(trackers) == 0:
         return np.empty((0, 2), dtype=int), np.arange(len(detections)), np.empty((0, 5), dtype=int)
     iou_matrix = np.zeros((len(detections), len(trackers)), dtype=np.float32)
 
     for d, det in enumerate(detections):
         for t, trk in enumerate(trackers):
             iou_matrix[d, t] = iou(det, trk)
-    matched_indices = linear_assignment(-iou_matrix)
+    matched_indices = np.column_stack(linear_assignment(-iou_matrix))
+    # matched_indices = DistanceConnector().connect(detections, trackers)
 
     unmatched_detections = []
     for d, det in enumerate(detections):
-        if (d not in matched_indices[:, 0]):
+        if d not in matched_indices[:, 0]:
             unmatched_detections.append(d)
     unmatched_trackers = []
     for t, trk in enumerate(trackers):
-        if (t not in matched_indices[:, 1]):
+        if t not in matched_indices[:, 1]:
             unmatched_trackers.append(t)
 
     # filter out matched with low IOU
     matches = []
     for m in matched_indices:
-        if (iou_matrix[m[0], m[1]] < iou_threshold):
+        if iou_matrix[m[0], m[1]] < iou_threshold:
             unmatched_detections.append(m[0])
             unmatched_trackers.append(m[1])
         else:
             matches.append(m.reshape(1, 2))
-    if (len(matches) == 0):
+    if len(matches) == 0:
         matches = np.empty((0, 2), dtype=int)
     else:
         matches = np.concatenate(matches, axis=0)
