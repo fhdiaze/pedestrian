@@ -1,18 +1,22 @@
 import dlib
 import cv2
 import numpy as np
+
+from pedestrian.tracking.DistanceConnector import DistanceConnector
+from pedestrian.tracking.Track import Track
 from pedestrian.tracking.Tracker import Tracker
 
 
 class Centroid(Tracker):
 
-    __slots__ = ["frame_count", "det_period", "trackers", "min_score"]
+    __slots__ = ["frame_count", "det_period", "trackers", "min_score", "next_idx"]
 
-    def __init__(self, det_period: int, min_score: float):
+    def __init__(self, det_period: int):
         self.frame_count = 0
         self.det_period = det_period
         self.trackers = []
-        self.min_score = min_score
+        self.tracks = dict()
+        self.next_idx = 1
 
     def track(self, frame, dets):
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -23,31 +27,33 @@ class Centroid(Tracker):
         if self.frame_count % self.det_period == 0:
             # set the status and initialize our new set of object trackers
             status = "Detecting"
+            trks = np.zeros((len(self.tracks), 5)) # [x1, y1, x2, y2, idx]
+
+            for i, (idx, t) in self.tracks.items():
+                (x1, y1, x2, y2) = t[-1, :]
+                trks[i, :-1] = [x1, y1, x2, y2, idx]
+
+            matches = DistanceConnector().connect(dets, trks)
 
             # loop over the detections
             for i in np.arange(0, dets.shape[0]):
-                # extract the confidence (i.e., probability) associated
-                # with the prediction
-                confidence = dets[i, 4]
-
-                # filter out weak detections by requiring a minimum
-                # confidence
-                if confidence > self.min_score:
-                    # compute the (x, y)-coordinates of the bounding box
-                    # for the object
+                if i not in matches[:, 0]:
                     box = dets[i, :]
                     (startX, startY, endX, endY) = box.astype("int")
 
-                    # construct a dlib rectangle object from the bounding
-                    # box coordinates and then start the dlib correlation
-                    # tracker
                     tracker = dlib.correlation_tracker()
                     rect = dlib.rectangle(startX, startY, endX, endY)
                     tracker.start_track(rgb, rect)
 
-                    # add the tracker to our list of trackers so we can
-                    # utilize it during skip frames
                     self.trackers.append(tracker)
+                    det =
+                else:
+                    (det, idx, _) = matches[matches[:, 0] == i, :]
+                    track = self.tracks.get(idx, Track(idx, np.empty((0, 4))))
+                    track.add(np.array([x1, y1, x2, y2]))
+                    self.tracks[idx] = track
+                    self.tracks[trk].add(dets[det, :])
+
 
         # otherwise, we should utilize our object *trackers* rather than
         # object *detectors* to obtain a higher frame processing throughput

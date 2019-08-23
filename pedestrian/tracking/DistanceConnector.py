@@ -14,6 +14,7 @@ class DistanceConnector(Connector):
         dets = self.cpm.from_two_Corners(dets[:, :-1])
         trks = self.cpm.from_two_Corners(trks[:, :-1])
         D = dist.cdist(dets, trks)
-        matched_indices = np.column_stack(linear_assignment(D))
+        matches = np.column_stack(linear_assignment(D))
+        np.column_stack([matches, D[matches[:, 0], matches[:, 0]]])
 
-        return matched_indices
+        return matches[matches[:, -1] < 10, :]
