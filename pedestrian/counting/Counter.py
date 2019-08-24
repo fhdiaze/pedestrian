@@ -7,14 +7,13 @@ from pedestrian.tracking.core.Track import Track
 
 
 class Counter(object):
-    __slots__ = ["frame_count", "detector", "det_period", "tracker", "tracks", "line", "up", "down", "pm"]
+    __slots__ = ["frame_count", "detector", "det_period", "tracker", "line", "up", "down", "pm"]
 
     def __init__(self, detector: Detector, det_period: int, tracker: Tracker, line=None):
-        self.frame_count = 0
+        self.frame_count = -1
         self.detector = detector
         self.tracker = tracker
         self.det_period = det_period
-        self.tracks = dict()
         self.line = line
         self.up = 0
         self.down = 0
@@ -25,7 +24,7 @@ class Counter(object):
 
         :param np.ndarray frame: a numpy array in the BGR format
         """
-
+        self.frame_count += 1
         dets = np.empty((0, 5))
 
         if self.frame_count % self.det_period == 0:
@@ -35,10 +34,7 @@ class Counter(object):
 
         for track in tracks:
             (x1, y1, x2, y2, idx) = track.astype("int")
-            track = self.tracks.get(idx, Track(idx, np.empty((0, 4))))
-            track.add(np.array([x1, y1, x2, y2]))
-            self.tracks[idx] = track
-            self.pm.plot(frame, self.pm.from_two_Corners(np.array([x1, y1, x2, y2])), Track.color(idx), idx)
+            self.pm.plot(frame, self.pm.from_two_corners(np.array([x1, y1, x2, y2])), Track.color(idx), idx)
 
         self.count()
 
@@ -60,12 +56,12 @@ class Counter(object):
     def count(self):
         """Updates the pedestrians counting
         """
-        for (oid, track) in self.tracks.items():
-            if not track.counted:
-                direction = track.direction()
+        for (idx, tracker) in self.tracker.trackers.items():
+            if not tracker.track.counted:
+                direction = tracker.track.direction()
 
-                if track.intersect(self.line) and direction != Track.STATIC:
-                    track.counted = True
+                if tracker.track.intersect(self.line) and direction != Track.STATIC:
+                    tracker.track.counted = True
                     if direction == Track.UP:
                         self.up += 1
                     elif direction == Track.DOWN:

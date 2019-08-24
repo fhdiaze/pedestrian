@@ -13,7 +13,7 @@ det_period = 5
 out_fps = 30
 proto = "C:/Users/kuby/Downloads/object-detection-deep-learning/MobileNetSSD_deploy.prototxt.txt"
 model = "C:/Users/kuby/Downloads/object-detection-deep-learning/MobileNetSSD_deploy.caffemodel"
-confidence = 0.2
+confidence = 0.1
 detector = MobileSSD(proto, model, confidence)
 pm = TwoCornersPM()
 connector = DistanceConnector()
@@ -25,7 +25,7 @@ counter = Counter(detector, det_period, tracker)
 in_path = "C:/Users/kuby/Documents/Fredy/Input/"
 # out_path = "/home/investigacion/Downloads/"
 out_path = "C:/Users/kuby/Documents/Fredy/Output/"
-in_name = "example_02.mp4"
+in_name = "Ch2_20181110121206.mp4"
 out_name = "Count_" + os.path.splitext(in_name)[0] + ".avi"
 in_video = os.path.join(in_path, in_name)
 out_video = os.path.join(out_path, out_name)
@@ -40,7 +40,7 @@ out = cv2.VideoWriter(out_video, cv2. VideoWriter_fourcc(*"MJPG"), out_fps, (vid
 
 f = 0
 ret = True
-while cap.isOpened() and ret and f < 1000:
+while cap.isOpened() and ret and f < 2000:
     ret, frame = cap.read()  # BGR code
 
     if ret:

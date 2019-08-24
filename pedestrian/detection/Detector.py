@@ -3,6 +3,11 @@ import numpy as np
 
 class Detector(object):
 
+    __slots__ = ["confidence"]
+
+    def __init__(self, confidence: float):
+        self.confidence = confidence
+
     def detect(self, frame):
         """Finds pedestrians in a frame
 

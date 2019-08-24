@@ -14,10 +14,10 @@ class DistanceConnector(Connector):
         self.max_distance = max_distance
 
     def connect(self, dets, tracks):
-        dets = self.cpm.from_two_Corners(dets[:, :-1])
-        tracks = self.cpm.from_two_Corners(tracks[:, :-1])
+        dets = self.cpm.from_two_corners(dets[:, :-1])
+        tracks = self.cpm.from_two_corners(tracks[:, :-1])
         D = dist.cdist(dets, tracks)
         matches = np.column_stack(linear_assignment(D))
-        np.column_stack([matches, D[matches[:, 0], matches[:, 0]]])
+        matches = np.column_stack([matches, D[matches[:, 0], matches[:, 1]]])
 
-        return matches[matches[:, -1] < self.max_distance, :-1]
+        return matches[matches[:, -1] < self.max_distance, :]

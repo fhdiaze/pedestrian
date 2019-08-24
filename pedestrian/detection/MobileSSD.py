@@ -9,10 +9,10 @@ class MobileSSD(Detector):
     __slots__ = ["ssd", "in_size", "person_class", "confidence", "pm", "s_range"]
 
     def __init__(self, proto: str, model: str, confidence: float):
+        super().__init__(confidence)
         self.ssd = cv2.dnn.readNetFromCaffe(proto, model)
         self.in_size = (300, 300)
         self.person_class = 15
-        self.confidence = confidence
         self.pm = TwoCornersPM()
         self.s_range = np.array([[0.0, 1.0], [0.0, 1.0]])
 

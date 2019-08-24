@@ -5,7 +5,7 @@ class Tracker(object):
 
     __slots__ = ["idx", "track", "unseen"]
 
-    def __init__(self, idx: int, position):
+    def __init__(self, idx: int, frame, position):
         self.idx = idx
         self.track = Track(position)
         self.unseen = 0
@@ -16,6 +16,6 @@ class Tracker(object):
     def update(self, frame):
         pass
 
-    def restart(self, det):
+    def restart(self, frame, position):
         self.unseen = 0
-        self.track.add(det)
+        self.track.add(position)

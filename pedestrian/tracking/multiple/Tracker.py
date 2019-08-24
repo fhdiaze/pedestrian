@@ -4,9 +4,9 @@ class Tracker(object):
 
     __slots__ = ["frame_count", "idx", "trackers", "connector", "max_unseen"]
 
-    def __init__(self, connector, max_unseen: int = 1):
+    def __init__(self, connector, max_unseen):
         self.frame_count = 0
-        self.idx = 0
+        self.idx = -1
         self.trackers = dict()
         self.connector = connector
         self.max_unseen = max_unseen

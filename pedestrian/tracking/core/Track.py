@@ -13,7 +13,7 @@ class Track(object):
     __slots__ = ["positions", "counted", "cpm"]
 
     def __init__(self, position):
-        self.positions = position
+        self.positions = position.reshape((-1, position.shape[-1]))
         self.counted = False
         self.cpm = CentroidPM(1.0, 1.0)
 
@@ -21,7 +21,7 @@ class Track(object):
         self.positions = np.vstack([self.positions, position])
 
     def direction(self):
-        centroids = self.cpm.from_two_Corners(self.positions)
+        centroids = self.cpm.from_two_corners(self.positions)
         direction = Track.STATIC
 
         if centroids.shape[0] > 1:
@@ -35,7 +35,7 @@ class Track(object):
 
     def intersect(self, line):
         r = False
-        centroids = self.cpm.from_two_Corners(self.positions)
+        centroids = self.cpm.from_two_corners(self.positions)
         pi = centroids[0, :]
         direction = self.direction()
 
