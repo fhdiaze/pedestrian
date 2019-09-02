@@ -35,14 +35,13 @@ class Centroid(Tracker):
                     if idx not in matches[:, 0]:
                         self.trackers[idx].unseen += 1
 
+            else:
+                self.trackers.clear()
+        else:
             # otherwise, we should utilize our object *trackers* rather than
             # object *detectors* to obtain a higher frame processing throughput
-            else:
-                # loop over the trackers
-                for idx, tracker in self.trackers.items():
-                    tracker.update(frame)
-        else:
-            self.trackers.clear()
+            for idx, tracker in self.trackers.items():
+                tracker.update(frame)
 
         positions = np.zeros((0, 5))    # [x1, y1, x2, y2, idx]
         lost = []

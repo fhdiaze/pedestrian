@@ -19,7 +19,7 @@ model = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_dep
 confidence = 0.1
 detector = MobileSSD(proto, model, confidence)
 pm = TwoCornersPM()
-connector = DistanceConnector()
+connector = DistanceConnector(200)
 tracker = Centroid(connector, detector, det_period, max_unseen)
 counter = Counter(tracker)
 
