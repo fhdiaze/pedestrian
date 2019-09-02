@@ -7,13 +7,10 @@ from pedestrian.tracking.core.Track import Track
 
 
 class Counter(object):
-    __slots__ = ["frame_count", "detector", "det_period", "tracker", "line", "up", "down", "pm"]
+    __slots__ = ["tracker", "line", "up", "down", "pm"]
 
-    def __init__(self, detector: Detector, det_period: int, tracker: Tracker, line=None):
-        self.frame_count = -1
-        self.detector = detector
+    def __init__(self, tracker: Tracker, line=None):
         self.tracker = tracker
-        self.det_period = det_period
         self.line = line
         self.up = 0
         self.down = 0
@@ -24,13 +21,7 @@ class Counter(object):
 
         :param np.ndarray frame: a numpy array in the BGR format
         """
-        self.frame_count += 1
-        dets = np.empty((0, 5))
-
-        if self.frame_count % self.det_period == 0:
-            dets = self.detector.detect(frame)
-
-        tracks = self.tracker.track(frame, dets)
+        tracks = self.tracker.track(frame)
 
         for track in tracks:
             (x1, y1, x2, y2, idx) = track.astype("int")

@@ -9,23 +9,24 @@ from pedestrian.tracking.multiple.Centroid import Centroid
 from pedestrian.tracking.multiple.Sort import Sort
 
 # Pipeline Variables
+workspace = "/home/investigacion/Documents/Workspace"
+# workspace = "/home/investigacion/Documents/Workspace"
 det_period = 5
+max_unseen = 1
 out_fps = 30
-proto = "C:/Users/kuby/Downloads/object-detection-deep-learning/MobileNetSSD_deploy.prototxt.txt"
-model = "C:/Users/kuby/Downloads/object-detection-deep-learning/MobileNetSSD_deploy.caffemodel"
+proto = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_deploy.prototxt.txt")
+model = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_deploy.caffemodel")
 confidence = 0.1
 detector = MobileSSD(proto, model, confidence)
 pm = TwoCornersPM()
 connector = DistanceConnector()
-tracker = Centroid(connector)
-counter = Counter(detector, det_period, tracker)
+tracker = Centroid(connector, detector, det_period, max_unseen)
+counter = Counter(tracker)
 
 # Environment Variables
-# in_path = "/home/investigacion/Downloads/"
-in_path = "C:/Users/kuby/Documents/Fredy/Input/"
-# out_path = "/home/investigacion/Downloads/"
-out_path = "C:/Users/kuby/Documents/Fredy/Output/"
-in_name = "Ch2_20181110121206.mp4"
+in_path = os.path.join(workspace, "Input")
+out_path = os.path.join(workspace, "Output")
+in_name = "example_01.mp4"
 out_name = "Count_" + os.path.splitext(in_name)[0] + ".avi"
 in_video = os.path.join(in_path, in_name)
 out_video = os.path.join(out_path, out_name)
