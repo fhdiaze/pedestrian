@@ -21,7 +21,7 @@ class Centroid(Tracker):
 
                 matches = self.connector.connect(dets, tracks)
 
-                for i in np.arange(0, dets.shape[0]):
+                for i in range(dets.shape[0]):
                     if i not in matches[:, 0]:
                         tracker = CorrelationTracker(self.next_id(), frame, dets[i, :-1])
                         self.trackers[tracker.idx] = tracker
@@ -31,8 +31,9 @@ class Centroid(Tracker):
                         tracker = self.trackers.get(idx)
                         tracker.restart(frame, dets[det, :-1])
 
-                for idx in tracks[:, -1].astype("int"):
-                    if idx not in matches[:, 0]:
+                for i in range(tracks.shape[0]):
+                    if i not in matches[:, 1]:
+                        idx = tracks[i, -1].astype("int")
                         self.trackers[idx].unseen += 1
 
             else:
