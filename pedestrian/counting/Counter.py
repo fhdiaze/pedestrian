@@ -42,7 +42,7 @@ class Counter(object):
         for (i, (k, v)) in enumerate(info):
             text = "{}: {}".format(k, v)
             cv2.putText(frame, text, (10, h - ((i * 20) + 20)),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
 
     def count(self):
         """Updates the pedestrians counting

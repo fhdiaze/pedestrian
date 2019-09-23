@@ -5,18 +5,21 @@ from pedestrian.detection.YoloV3Voc import YoloV3Voc
 from pedestrian.detection.YoloV3Coco import YoloV3Coco
 from pedestrian.detection.MobileSSD import MobileSSD
 from pedestrian.position.TwoCornersPM import TwoCornersPM
-from PIL import Image, ImageDraw
 
-proto = "C:/Users/kuby/Downloads/object-detection-deep-learning/MobileNetSSD_deploy.prototxt.txt"
-model = "C:/Users/kuby/Downloads/object-detection-deep-learning/MobileNetSSD_deploy.caffemodel"
+# Pipeline Variables
+workspace = "/home/investigacion/Documents/Workspace"
+# workspace = "/home/investigacion/Documents/Workspace"
+proto = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_deploy.prototxt.txt")
+model = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_deploy.caffemodel")
 confidence = 0.2
-detector = MobileSSD(proto, model, confidence)
+# detector = MobileSSD(proto, model, confidence)
+detector = YoloV3Voc()
 det_name = type(detector).__name__
-#in_path = "/home/investigacion/Pictures/InputImages"
-in_path = "C:/Users/kuby/Downloads/"
-out_path = "/home/investigacion/Pictures/OutputImages"
-out_path = "C:/Users/kuby/Downloads/"
-in_name = "TM_evasores_00127.jpg"
+
+# Environment Variables
+in_path = os.path.join(workspace, "Input")
+out_path = os.path.join(workspace, "Output")
+in_name = "TM_evasores_00099.jpg"
 out_name = det_name + "Box" + in_name
 outline = "blue"
 pm = TwoCornersPM()
