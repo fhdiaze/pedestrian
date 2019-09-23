@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 from pedestrian.counting.Counter import Counter
 from pedestrian.detection.MobileSSD import MobileSSD
+from pedestrian.detection.YoloV3Coco import YoloV3Coco
 from pedestrian.detection.YoloV3Voc import YoloV3Voc
 from pedestrian.tracking.DistanceConnector import DistanceConnector
 from pedestrian.tracking.multiple.Centroid import Centroid
@@ -18,7 +19,7 @@ confidence = 0.3
 proto = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_deploy.prototxt.txt")
 model = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_deploy.caffemodel")
 # detector = MobileSSD(proto, model, confidence)
-detector = YoloV3Voc()
+detector = YoloV3Coco()
 
 # Tracker Configuration
 max_unseen = 30
