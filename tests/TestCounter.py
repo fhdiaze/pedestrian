@@ -56,6 +56,7 @@ while cap.isOpened() and ret:
         out.write(frame)
 
     f += 1
+    print(f)
 
 print("UP: {}, DOWN: {}".format(counter.up, counter.down))
 # When everything done, release the video capture and video write objects
