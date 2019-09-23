@@ -11,22 +11,23 @@ from pedestrian.tracking.multiple.Sort import Sort
 # Pipeline Variables
 workspace = "/home/investigacion/Documents/Workspace"
 # workspace = "/home/investigacion/Documents/Workspace"
-det_period = 5
-max_unseen = 1
+det_period = 10
+max_unseen = 30
+max_distance = 50
 out_fps = 30
 proto = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_deploy.prototxt.txt")
 model = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_deploy.caffemodel")
-confidence = 0.1
+confidence = 0.3
 detector = MobileSSD(proto, model, confidence)
 pm = TwoCornersPM()
-connector = DistanceConnector(200)
+connector = DistanceConnector(max_distance)
 tracker = Centroid(connector, detector, det_period, max_unseen)
 counter = Counter(tracker)
 
 # Environment Variables
 in_path = os.path.join(workspace, "Input")
 out_path = os.path.join(workspace, "Output")
-in_name = "example_01.mp4"
+in_name = "Ch4_20181029060955.mp4"
 out_name = "Count_" + os.path.splitext(in_name)[0] + ".avi"
 in_video = os.path.join(in_path, in_name)
 out_video = os.path.join(out_path, out_name)
@@ -41,7 +42,7 @@ out = cv2.VideoWriter(out_video, cv2. VideoWriter_fourcc(*"MJPG"), out_fps, (vid
 
 f = 0
 ret = True
-while cap.isOpened() and ret and f < 2000:
+while cap.isOpened() and ret:
     ret, frame = cap.read()  # BGR code
 
     if ret:
