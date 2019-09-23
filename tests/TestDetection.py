@@ -13,7 +13,7 @@ proto = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_dep
 model = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_deploy.caffemodel")
 confidence = 0.2
 # detector = MobileSSD(proto, model, confidence)
-detector = YoloV3Voc()
+detector = YoloV3Coco()
 det_name = type(detector).__name__
 
 # Environment Variables
@@ -25,8 +25,7 @@ outline = "blue"
 pm = TwoCornersPM()
 
 frame = cv2.imread(os.path.join(in_path, in_name))
-rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-boxes = detector.detect(rgb_frame)
+boxes = detector.detect(frame)
 
 if boxes.size != 0:
     for box in boxes[:, :4]:

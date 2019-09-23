@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from pedestrian.counting.Counter import Counter
 from pedestrian.detection.MobileSSD import MobileSSD
-from pedestrian.position.TwoCornersPM import TwoCornersPM
+from pedestrian.detection.YoloV3Voc import YoloV3Voc
 from pedestrian.tracking.DistanceConnector import DistanceConnector
 from pedestrian.tracking.multiple.Centroid import Centroid
 from pedestrian.tracking.multiple.Sort import Sort
@@ -11,23 +11,29 @@ from pedestrian.tracking.multiple.Sort import Sort
 # Pipeline Variables
 workspace = "/home/investigacion/Documents/Workspace"
 # workspace = "/home/investigacion/Documents/Workspace"
+
+# Detector Configuration
 det_period = 10
-max_unseen = 30
-max_distance = 50
-out_fps = 30
+confidence = 0.3
 proto = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_deploy.prototxt.txt")
 model = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_deploy.caffemodel")
-confidence = 0.3
-detector = MobileSSD(proto, model, confidence)
-pm = TwoCornersPM()
+# detector = MobileSSD(proto, model, confidence)
+detector = YoloV3Voc()
+
+# Tracker Configuration
+max_unseen = 30
+max_distance = 50
 connector = DistanceConnector(max_distance)
 tracker = Centroid(connector, detector, det_period, max_unseen)
+
+# Counter Configuration
 counter = Counter(tracker)
 
 # Environment Variables
+out_fps = 30
 in_path = os.path.join(workspace, "Input")
 out_path = os.path.join(workspace, "Output")
-in_name = "Ch4_20181029060955.mp4"
+in_name = "example_01.mp4"
 out_name = "Count_" + os.path.splitext(in_name)[0] + ".avi"
 in_video = os.path.join(in_path, in_name)
 out_video = os.path.join(out_path, out_name)

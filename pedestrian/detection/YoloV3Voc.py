@@ -15,6 +15,7 @@ class YoloV3Voc(Detector):
         self.in_size = (416, 416)
 
     def detect(self, frame):
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         cv2.resize(frame, self.in_size)
         frame = np.expand_dims(frame, axis=0)
 
