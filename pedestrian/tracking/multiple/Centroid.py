@@ -1,7 +1,4 @@
-import dlib
-import cv2
 import numpy as np
-from pedestrian.tracking.DistanceConnector import DistanceConnector
 from pedestrian.tracking.multiple.Tracker import Tracker
 from pedestrian.tracking.single.CorrelationTracker import CorrelationTracker
 
@@ -19,14 +16,14 @@ class Centroid(Tracker):
                     (x1, y1, x2, y2) = t.track.positions[-1, :]
                     tracks[i, :] = [x1, y1, x2, y2, idx]
 
-                matches = self.connector.connect(dets, tracks)
+                matches = self.connector.connect(dets, tracks).astype("int")
 
                 for i in range(dets.shape[0]):
                     if i not in matches[:, 0]:
                         tracker = CorrelationTracker(self.next_id(), frame, dets[i, :-1])
                         self.trackers[tracker.idx] = tracker
                     else:
-                        (det, idx, _) = matches[matches[:, 0] == i, :][0, :].astype("int")
+                        (det, idx, _) = matches[matches[:, 0] == i, :][0, :]
                         idx = tracks[idx, -1].astype("int")
                         tracker = self.trackers.get(idx)
                         tracker.restart(frame, dets[det, :-1])
