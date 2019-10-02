@@ -2,6 +2,7 @@ import os
 import cv2
 import numpy as np
 from pedestrian.counting.Counter import Counter
+from pedestrian.detection.HOGDetector import HOGDetector
 from pedestrian.detection.MobileSSD import MobileSSD
 from pedestrian.detection.YoloV3Coco import YoloV3Coco
 from pedestrian.detection.YoloV3Voc import YoloV3Voc
@@ -10,8 +11,8 @@ from pedestrian.tracking.multiple.Centroid import Centroid
 from pedestrian.tracking.multiple.Sort import Sort
 
 # Pipeline Variables
-workspace = "/home/investigacion/Documents/Workspace"
 # workspace = "/home/investigacion/Documents/Workspace"
+workspace = "C:/Users/kuby/Documents/Fredy/Workspace"
 
 # Detector Configuration
 det_period = 10
@@ -19,12 +20,14 @@ confidence = 0.3
 proto = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_deploy.prototxt.txt")
 model = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_deploy.caffemodel")
 # detector = MobileSSD(proto, model, confidence)
-detector = YoloV3Coco()
+detector = HOGDetector()
+# detector = YoloV3Coco()
 
 # Tracker Configuration
 max_unseen = 30
 max_distance = 50
 connector = DistanceConnector(max_distance)
+
 tracker = Centroid(connector, detector, det_period, max_unseen)
 
 # Counter Configuration
@@ -57,7 +60,6 @@ while cap.isOpened() and ret:
         out.write(frame)
 
     f += 1
-    print(f)
 
 print("UP: {}, DOWN: {}".format(counter.up, counter.down))
 # When everything done, release the video capture and video write objects
