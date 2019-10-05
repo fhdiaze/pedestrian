@@ -16,11 +16,11 @@ workspace = "C:/Users/kuby/Documents/Fredy/Workspace"
 
 # Detector Configuration
 det_period = 10
-confidence = 0.3
+confidence = 0.7
 proto = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_deploy.prototxt.txt")
 model = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_deploy.caffemodel")
 # detector = MobileSSD(proto, model, confidence)
-detector = HOGDetector()
+detector = HOGDetector(confidence=confidence)
 # detector = YoloV3Coco()
 
 # Tracker Configuration

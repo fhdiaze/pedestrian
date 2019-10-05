@@ -13,7 +13,7 @@ workspace = "C:/Users/kuby/Documents/Fredy/Workspace"
 # workspace = "/home/investigacion/Documents/Workspace"
 proto = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_deploy.prototxt.txt")
 model = os.path.join(workspace, "object-detection-deep-learning/MobileNetSSD_deploy.caffemodel")
-confidence = 0.2
+confidence = 0.3
 # detector = MobileSSD(proto, model, confidence)
 # detector = YoloV3Coco()
 detector = HOGDetector(confidence=confidence)
@@ -22,7 +22,7 @@ det_name = type(detector).__name__
 # Environment Variables
 in_path = os.path.join(workspace, "Input")
 out_path = os.path.join(workspace, "Output")
-in_name = "person_010.bmp"
+in_name = "transmi.jpg"
 out_name = det_name + "Box" + in_name
 outline = "blue"
 pm = TwoCornersPM()

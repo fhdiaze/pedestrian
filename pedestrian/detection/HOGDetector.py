@@ -8,13 +8,13 @@ class HOGDetector(Detector):
     __slots__ = ["in_size", "stride", "padding", "mean_shift", "scale", "confidence", "s_range", "pm", "hog"]
 
     def __init__(self, stride=(2, 2), padding=(16, 16), mean_shift=False, scale=1.01, confidence: float = 1.0):
-        self.in_size = (400, 400)
+        self.in_size = (600, 600)   # w, h
         self.stride = stride
         self.padding = padding
         self.mean_shift = mean_shift
         self.scale = scale
         self.confidence = confidence
-        self.s_range = np.array([[0.0, 400], [0.0, 400]])
+        self.s_range = np.array([[0.0, self.in_size[0]], [0.0, self.in_size[1]]])
         self.pm = TwoCornersPM()
         self.hog = cv2.HOGDescriptor()
         self.hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
