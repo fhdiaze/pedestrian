@@ -8,7 +8,7 @@ class HOGDetector(Detector):
     __slots__ = ["in_size", "stride", "padding", "mean_shift", "scale", "confidence", "s_range", "pm", "hog"]
 
     def __init__(self, stride=(2, 2), padding=(16, 16), mean_shift=False, scale=1.01, confidence: float = 1.0):
-        self.in_size = (600, 600)   # w, h
+        self.in_size = (450, 450)   # w, h
         self.stride = stride
         self.padding = padding
         self.mean_shift = mean_shift

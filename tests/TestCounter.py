@@ -11,8 +11,8 @@ from pedestrian.tracking.multiple.Centroid import Centroid
 from pedestrian.tracking.multiple.Sort import Sort
 
 # Pipeline Variables
-# workspace = "/home/investigacion/Documents/Workspace"
-workspace = "C:/Users/kuby/Documents/Fredy/Workspace"
+workspace = "/home/investigacion/Documents/Workspace"
+# workspace = "C:/Users/kuby/Documents/Fredy/Workspace"
 
 # Detector Configuration
 det_period = 10
@@ -37,7 +37,7 @@ counter = Counter(tracker)
 out_fps = 30
 in_path = os.path.join(workspace, "Input")
 out_path = os.path.join(workspace, "Output")
-in_name = "example_01.mp4"
+in_name = "Ch4_20181029075548.mp4"
 out_name = "Count_" + os.path.splitext(in_name)[0] + ".avi"
 in_video = os.path.join(in_path, in_name)
 out_video = os.path.join(out_path, out_name)
